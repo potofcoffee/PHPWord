@@ -22,8 +22,10 @@ use PhpOffice\PhpWord\Element\AbstractContainer;
 use PhpOffice\PhpWord\Element\Field;
 use PhpOffice\PhpWord\Element\Image;
 use PhpOffice\PhpWord\Element\Row as RowElement;
+use PhpOffice\PhpWord\Element\Shape;
 use PhpOffice\PhpWord\Element\Table;
 use PhpOffice\PhpWord\Element\Text;
+use PhpOffice\PhpWord\Element\TextBox;
 use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\Element\TrackChange;
 use PhpOffice\PhpWord\PhpWord;
@@ -49,7 +51,7 @@ class Content extends AbstractPart
      *
      * @var array
      */
-    private $autoStyles = ['Section' => [], 'Image' => [], 'Table' => [], 'Row' => []];
+    private $autoStyles = ['Section' => [], 'Image' => [], 'Table' => [], 'Row' => [], 'Shape' => [], 'TextBox' => []];
 
     private $imageParagraphStyles = [];
 
@@ -285,6 +287,15 @@ class Content extends AbstractPart
                 $sty->setAuto();
                 $sty->setAlignment($style->getAlignment());
                 $this->imageParagraphStyles[] = $sty;
+            } elseif ($element instanceof Shape) {
+                $style = $element->getStyle();
+                $style->setStyleName('sh' . $element->getElementId());
+                $this->autoStyles['Shape'][] = $style;
+            } elseif ($element instanceof TextBox) {
+                $style = $element->getStyle();
+                $style->setStyleName('tb' . $element->getElementId());
+                $this->autoStyles['TextBox'][] = $style;
+                $this->getContainerStyle($element, $paragraphStyleCount, $fontStyleCount);
             } elseif ($element instanceof Table) {
                 $style = $element->getStyle();
                 if (is_string($style)) {
