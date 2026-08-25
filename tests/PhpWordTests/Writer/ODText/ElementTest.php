@@ -44,7 +44,7 @@ class ElementTest extends \PHPUnit\Framework\TestCase
      */
     public function testUnmatchedElements(): void
     {
-        $elements = ['Image', 'Link', 'Table', 'Text', 'Title', 'Field'];
+        $elements = ['Image', 'Line', 'Link', 'Table', 'Text', 'Title', 'Field'];
         foreach ($elements as $element) {
             $objectClass = 'PhpOffice\\PhpWord\\Writer\\ODText\\Element\\' . $element;
             $xmlWriter = new XMLWriter();
@@ -56,7 +56,6 @@ class ElementTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    // ODT Line Element not yet implemented
     // ODT Bookmark not yet implemented
     // ODT Table with style name not yet implemented (Word test defective)
     // ODT Shape Elements not yet implemented

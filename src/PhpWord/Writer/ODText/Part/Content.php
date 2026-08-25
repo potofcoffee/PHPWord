@@ -21,6 +21,7 @@ namespace PhpOffice\PhpWord\Writer\ODText\Part;
 use PhpOffice\PhpWord\Element\AbstractContainer;
 use PhpOffice\PhpWord\Element\Field;
 use PhpOffice\PhpWord\Element\Image;
+use PhpOffice\PhpWord\Element\Line;
 use PhpOffice\PhpWord\Element\Row as RowElement;
 use PhpOffice\PhpWord\Element\Table;
 use PhpOffice\PhpWord\Element\Text;
@@ -30,6 +31,7 @@ use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Shared\XMLWriter;
 use PhpOffice\PhpWord\Style;
 use PhpOffice\PhpWord\Style\Font;
+use PhpOffice\PhpWord\Style\Line as LineStyle;
 use PhpOffice\PhpWord\Style\Paragraph;
 use PhpOffice\PhpWord\Style\Table as TableStyle;
 use PhpOffice\PhpWord\Writer\ODText\Element\Container;
@@ -49,7 +51,7 @@ class Content extends AbstractPart
      *
      * @var array
      */
-    private $autoStyles = ['Section' => [], 'Image' => [], 'Table' => [], 'Row' => []];
+    private $autoStyles = ['Section' => [], 'Image' => [], 'Line' => [], 'Table' => [], 'Row' => []];
 
     private $imageParagraphStyles = [];
 
@@ -285,6 +287,13 @@ class Content extends AbstractPart
                 $sty->setAuto();
                 $sty->setAlignment($style->getAlignment());
                 $this->imageParagraphStyles[] = $sty;
+            } elseif ($element instanceof Line) {
+                if (!$element->getElementId()) {
+                    $element->setElementId();
+                }
+                $style = $element->getStyle() ?: new LineStyle();
+                $style->setStyleName($element->getElementId());
+                $this->autoStyles['Line'][] = $style;
             } elseif ($element instanceof Table) {
                 $style = $element->getStyle();
                 if (is_string($style)) {
